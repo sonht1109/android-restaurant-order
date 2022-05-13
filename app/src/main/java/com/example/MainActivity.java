@@ -48,13 +48,16 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        bottomNavigationView.getMenu().findItem(R.id.navigation_today).setChecked(true);
+                        bottomNavigationView.getMenu().findItem(R.id.bottom_nav_menu).setChecked(true);
                         break;
                     case 1:
-                        bottomNavigationView.getMenu().findItem(R.id.navigation_history).setChecked(true);
+                        bottomNavigationView.getMenu().findItem(R.id.bottom_nav_favorite).setChecked(true);
+                        break;
+                    case 2:
+                        bottomNavigationView.getMenu().findItem(R.id.bottom_nav_order).setChecked(true);
                         break;
                     default:
-                        bottomNavigationView.getMenu().findItem(R.id.navigation_stat).setChecked(true);
+                        bottomNavigationView.getMenu().findItem(R.id.bottom_nav_bill).setChecked(true);
                         break;
                 }
             }
@@ -69,14 +72,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.navigation_today:
+                    case R.id.bottom_nav_menu:
                         viewPager.setCurrentItem(0);
                         break;
-                    case R.id.navigation_history:
+                    case R.id.bottom_nav_favorite:
                         viewPager.setCurrentItem(1);
                         break;
-                    default:
+                    case R.id.bottom_nav_order:
                         viewPager.setCurrentItem(2);
+                        break;
+                    default:
+                        viewPager.setCurrentItem(3);
                         break;
                 }
                 return true;
@@ -85,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onOpenCreateItem() {
-        Intent i = new Intent(MainActivity.this, CreateItemActivity.class);
-        startActivity(i);
+
     }
 }

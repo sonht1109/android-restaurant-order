@@ -5,15 +5,16 @@
     android:orientation="horizontal"
     android:padding="10dp">
 
-<!--    <ImageView-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:id="@+id/item_view_img"-->
-<!--        android:layout_marginRight="10dp"-->
-<!--        />-->
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/item_view_img"
+        android:src="@drawable/adeptus"
+        android:layout_marginRight="10dp"
+        />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -28,27 +29,7 @@
             android:id="@+id/item_view_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Author" />
-
-        <TextView
-            android:id="@+id/item_view_b_short"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Short" />
-
-        <TextView
-            android:id="@+id/item_view_publisher"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Publisher" />
-        
-        <RatingBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/item_view_holder_rating"
-            android:numStars="5"
-            android:focusable="false"
-            android:clickable="false"
-            />
+            android:layout_marginTop="20dp"
+            android:text="30000" />
     </LinearLayout>
 </LinearLayout>

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Light.NoActionBar">
         <activity
-            android:name=".CreateItemActivity"
+            android:name=".LoginActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

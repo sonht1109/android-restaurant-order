@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,16 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.R;
-import com.example.CreateItemActivity;
 import com.example.adapter.ListAdapter;
 import com.example.db.SQLiteHelper;
 import com.example.model.Item;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-public class FrToday extends Fragment implements ListAdapter.ItemListener {
+public class FrMenu extends Fragment implements ListAdapter.ItemListener {
 
     private RecyclerView rcv;
     private SQLiteHelper sqLiteHelper;
@@ -33,7 +29,7 @@ public class FrToday extends Fragment implements ListAdapter.ItemListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fr_today, container, false);
+        return inflater.inflate(R.layout.fr_menu, container, false);
     }
 
     @Override
