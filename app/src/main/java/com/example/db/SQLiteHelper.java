@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import com.example.model.Disk;
 import com.example.model.Item;
 import com.example.model.Order;
+import com.example.model.Values;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,10 +58,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         super.onOpen(db);
     }
 
-    public List<Item> getAllItems() {
-        return getItems(null, null);
-    }
-
     public List<Disk> getAllDisks() {
         List<Disk> disks = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -73,6 +70,30 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             disks.add(new Disk(id, image, price, name));
         }
         return disks;
+    }
+
+    public List<Order> getCurrentOrders(String phone, int tableNumber) {
+        SQLiteDatabase db = getReadableDatabase();
+        List<Order> orders = new ArrayList<>();
+        String[] args = {phone, String.valueOf(tableNumber)};
+        Cursor c = db.rawQuery("select o.id, o.quantity, d.name, d.price, o.status " +
+                "from disk as d, diskOrder as o " +
+                "where d.id = o.disk_id and o.phone = ? and o.tableNumber = ? and o.status in (0, 1)", args);
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                int id = c.getInt(0);
+                int quantity = c.getInt(1);
+                String diskName = c.getString(2);
+                float diskPrice = c.getFloat(3);
+                int status = c.getInt(3);
+                Disk disk = new Disk(diskPrice, diskName);
+                Order order = new Order(quantity, disk, id, status);
+                orders.add(order);
+                c.moveToNext();
+            }
+        }
+        return orders;
     }
 
     public List<Disk> getMostFavoriteDisks() {
@@ -111,13 +132,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     }
 
     public int updateOrder(Order order) {
+        Log.i("UPDATE ORDER", order.toString());
         ContentValues values = new ContentValues();
-        values.put("quantity", order.getQuantity());
-        values.put("date", order.getDate());
         values.put("status", order.getStatus());
-        values.put("phone", order.getPhone());
-        values.put("tableNumber", order.getTableNumber());
-        values.put("disk_id", order.getDisk().getId());
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String[] args = {String.valueOf(order.getId())};
         return sqLiteDatabase.update("diskOrder", values, "id=?", args);
@@ -134,9 +151,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         List<Order> orders = new ArrayList<>();
         String[] args = {phone, String.valueOf(tableNumber)};
-        Cursor c = db.rawQuery("select o.id, o.quantity, d.name, d.price " +
+        Cursor c = db.rawQuery("select o.id, o.quantity, d.name, d.price, o.status " +
                 "from disk as d, diskOrder as o " +
-                "where d.id = o.diskId and o.phone = ? and o.tableNumber = ?", args);
+                "where d.id = o.disk_id and o.phone = ? and o.tableNumber = ? and o.status = 1", args);
         if (c.getCount() > 0) {
             c.moveToFirst();
             while (!c.isAfterLast()) {
@@ -144,8 +161,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 int quantity = c.getInt(1);
                 String diskName = c.getString(2);
                 float diskPrice = c.getFloat(3);
+                int status = c.getInt(4);
                 Disk disk = new Disk(diskPrice, diskName);
-                Order order = new Order(quantity, disk, id);
+                Order order = new Order(quantity, disk, id, status);
                 orders.add(order);
                 c.moveToNext();
             }
@@ -153,7 +171,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return orders;
     }
 
-    public boolean checkout(String phone, int tableNumber) {
+    public boolean pay(String phone, int tableNumber) {
         List<Order> orders = getBill(phone, tableNumber);
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -165,82 +183,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 db.update("diskOrder", values, "id=?", args);
             }
             db.setTransactionSuccessful();
-        } finally {
-            db.close();
+        } catch (Exception e){
+            return false;
         }
         return true;
     }
 
-    public List<Item> searchItems(String sql, String[] args) {
-        List<Item> items = new ArrayList<>();
-//        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-//        Cursor cursor = sqLiteDatabase.rawQuery(sql, args);
-//        Log.i("CURSOR COUNT", "" + cursor.getCount());
-//        if (cursor.getCount() > 0) {
-//            cursor.moveToFirst();
-//            while (!cursor.isAfterLast()) {
-//                int id = cursor.getInt(0);
-//                String title = cursor.getString(1);
-//                String author = cursor.getString(2);
-//                String bShort = cursor.getString(3);
-//                String publisher = cursor.getString(4);
-//                float rate = cursor.getFloat(5);
-//                items.add(new Item(id, title, author, bShort, publisher, rate));
-//                cursor.moveToNext();
-//            }
-//        }
-        return items;
-    }
-
-    public List<Item> getItems(String clause, String[] args) {
-        List<Item> items = new ArrayList<>();
-//        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-//        Cursor cursor = sqLiteDatabase.query("book", null, clause, args, null, null, "rate desc");
-//        while (cursor != null && cursor.moveToNext()) {
-//            int id = cursor.getInt(0);
-//            String title = cursor.getString(1);
-//            String author = cursor.getString(2);
-//            String bShort = cursor.getString(3);
-//            String publisher = cursor.getString(4);
-//            float rate = cursor.getFloat(5);
-//            items.add(new Item(id, title, author, bShort, publisher, rate));
-//        }
-        return items;
-    }
-
-    public long createItem(Item item) {
-//        ContentValues values = new ContentValues();
-//        values.put("title", item.getTitle());
-//        values.put("author", item.getAuthor());
-//        values.put("bShort", item.getbShort());
-//        values.put("publisher", item.getPublisher());
-//        values.put("rate", item.getRate());
-//        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-//        return sqLiteDatabase.insert("book", null, values);
-        return -1;
-    }
-
-    public int updateItem(Item item) {
-//        ContentValues values = new ContentValues();
-//        values.put("title", item.getTitle());
-//        values.put("author", item.getAuthor());
-//        values.put("bShort", item.getbShort());
-//        values.put("publisher", item.getPublisher());
-//        values.put("rate", item.getRate());
-//
-//        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-//
-//        String clause = "id=?";
-//        String[] args = {String.valueOf(item.getId())};
-//
-//        return sqLiteDatabase.update("book", values, clause, args);
-        return -1;
-    }
-
-    public int deleteItem(int id) {
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        String clause = "id=?";
-        String[] args = {String.valueOf(id)};
-        return sqLiteDatabase.delete("book", clause, args);
-    }
 }

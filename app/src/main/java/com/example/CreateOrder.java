@@ -49,7 +49,6 @@ public class CreateOrder extends AppCompatActivity {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 String today = dateFormat.format(c.getTime());
                 long res = db.createOrder(new Order(Integer.parseInt(quantity), tableNumber, Values.ORDER_STATUS_PENDING, disk, today, phone));
-                Log.i("Create table res", res + "");
                 if (res >= 0) {
                     finish();
                 } else {
