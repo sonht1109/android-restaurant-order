@@ -3,30 +3,32 @@ package com.example.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.R;
-import com.example.model.Item;
+import com.example.model.Disk;
+import com.example.model.Values;
 
 import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder> {
 
-    private List<Item> items;
+    private List<Disk> disks;
     private ItemListener itemListener;
 
     public ListAdapter() {
     }
 
-    public List<Item> getItems() {
-        return items;
+    public List<Disk> getDisks() {
+        return disks;
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void setDisks(List<Disk> disks) {
+        this.disks = disks;
         notifyDataSetChanged();
     }
 
@@ -43,25 +45,28 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Item item = items.get(position);
-        if (item == null) return;
-        holder.tvTitle.setText(item.getTitle());
-        holder.tvAuthor.setText(item.getAuthor());
+        Disk d = disks.get(position);
+        if (d == null) return;
+        holder.tvName.setText(d.getName());
+        holder.tvPrice.setText(String.valueOf(d.getPrice()));
+        holder.imageView.setImageResource(Values.FOOD_IMAGES[d.getImage()]);
     }
 
     @Override
     public int getItemCount() {
-        if (items == null) return 0;
-        return items.size();
+        if (disks == null) return 0;
+        return disks.size();
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvTitle, tvAuthor;
+        private TextView tvName, tvPrice;
+        private ImageView imageView;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTitle = itemView.findViewById(R.id.item_view_title);
-            tvAuthor = itemView.findViewById(R.id.item_view_author);
+            tvName = itemView.findViewById(R.id.item_view_name);
+            tvPrice = itemView.findViewById(R.id.item_view_price);
+            imageView = itemView.findViewById(R.id.item_view_img);
 
             itemView.setOnClickListener(v -> {
                 if (itemView != null) {

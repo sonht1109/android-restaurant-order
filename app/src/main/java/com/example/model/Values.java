@@ -6,6 +6,7 @@ public class Values {
     public static final int ORDER_STATUS_PENDING = 0;
     public static final int ORDER_STATUS_ACCEPTED = 1;
     public static final int ORDER_STATUS_PAID = 2;
+    public static final Integer[] TABLE_NUMBERS = new Integer[]{1, 2, 3, 4, 5, 6};
 
     // adeptus: Súp cua dăm bông
     // sandwich: Trứng ốp
@@ -13,7 +14,7 @@ public class Values {
     // bamboo: Măng chua
     // bery: Mochi mâm xôi
     // sushi: Sushi trứng chim
-    public static final int[] foodImages = {R.drawable.adeptus,
+    public static final int[] FOOD_IMAGES = {R.drawable.adeptus,
             R.drawable.sandwich, R.drawable.almond_tofu,
             R.drawable.bamboo, R.drawable.berry_mizu, R.drawable.sushi};
 }

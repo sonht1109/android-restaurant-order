@@ -11,15 +11,18 @@
         <entry key="app/src/main/res/drawable/ic_today.xml" value="0.209375" />
         <entry key="app/src/main/res/layout/activity_bottom.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_create_item.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/activity_create_order.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fr_bill.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/fr_favorite.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fr_history.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fr_stat.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fr_today.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/image_view_holder.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/item_view_holder.xml" value="0.22" />
         <entry key="app/src/main/res/layout/spinner_category.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/layout/table_number_holder.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.178125" />
         <entry key="app/src/main/res/menu/navigation.xml" value="0.19322916666666667" />
       </map>

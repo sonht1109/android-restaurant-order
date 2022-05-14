@@ -16,6 +16,12 @@ public class Order implements Serializable {
         this.phone = phone;
     }
 
+    public Order(int quantity, Disk disk, int id) {
+        this.quantity = quantity;
+        this.disk = disk;
+        this.id = id;
+    }
+
     public Order(int id, int quantity, int tableNumber, int status, Disk disk, String date, String phone) {
         this.id = id;
         this.quantity = quantity;

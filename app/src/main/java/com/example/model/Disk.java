@@ -21,6 +21,11 @@ public class Disk implements Serializable {
         this.name = name;
     }
 
+    public Disk(float price, String name) {
+        this.price = price;
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "Disk{" +

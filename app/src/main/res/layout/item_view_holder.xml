@@ -19,14 +19,14 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/item_view_title"
+            android:id="@+id/item_view_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Title"
             android:textSize="20dp" />
 
         <TextView
-            android:id="@+id/item_view_author"
+            android:id="@+id/item_view_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
