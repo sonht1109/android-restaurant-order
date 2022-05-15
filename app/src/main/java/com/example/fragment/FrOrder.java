@@ -29,7 +29,7 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
     private RecyclerView rcv;
     private String phone;
     private int tableNumber;
-    private Button btnCofirmOrders;
+    private Button btnConfirmOrders;
 
     @Nullable
     @Override
@@ -44,7 +44,7 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
         phone = getActivity().getIntent().getExtras().getString("phone");
         tableNumber = getActivity().getIntent().getExtras().getInt("tableNumber");
         rcv = view.findViewById(R.id.order_rcv);
-        btnCofirmOrders = view.findViewById(R.id.order_btn_confirm_orders);
+        btnConfirmOrders = view.findViewById(R.id.order_btn_confirm_orders);
 
         db = new SQLiteHelper(getContext());
         adapter = new OrderListAdapter();
@@ -55,7 +55,7 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
         adapter.setOrderItemListener(this);
         getOrders();
 
-        btnCofirmOrders.setOnClickListener(v -> {
+        btnConfirmOrders.setOnClickListener(v -> {
             boolean res = db.confirmOrders(phone, tableNumber);
             if(res == true) {
                 getOrders();
@@ -72,6 +72,7 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
     private void getOrders() {
         List <Order> orders = db.getCurrentOrders(phone, tableNumber);
         adapter.setOrders(orders);
+        updateConfirmButtonVisible();
     }
 
     @Override
@@ -85,5 +86,21 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
             adapter.getOrders().remove(position);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private boolean canConfirmOrders() {
+        boolean res = false;
+        List <Order> orders = adapter.getOrders();
+        for(Order o : orders) {
+            if(o.getStatus() == Values.ORDER_STATUS_PENDING) {
+                res = true;
+                break;
+            }
+        }
+        return res;
+    }
+
+    private void updateConfirmButtonVisible() {
+        btnConfirmOrders.setVisibility(canConfirmOrders() ? View.VISIBLE : View.GONE);
     }
 }

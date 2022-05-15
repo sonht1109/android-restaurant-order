@@ -99,7 +99,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public List<Disk> getMostFavoriteDisks() {
         List<Disk> disks = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.query("disk", null, null, null, null, null, null);
+        String[] args= {};
+        Cursor c = db.rawQuery("select d.id, d.name, d.price, d.image, count(d.id) " +
+                "from disk as d, diskOrder as o " +
+                "where o.disk_id = d.id and o.status = 2 " +
+                "group by d.id having count(d.id) > 0 order by count(d.id) desc", args);
         while (c != null && c.moveToNext()) {
             int id = c.getInt(0);
             String name = c.getString(1);
@@ -172,7 +176,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public boolean pay(String phone, int tableNumber) {
         List<Order> orders = getBill(phone, tableNumber);
-        SQLiteDatabase db = getWritableDatabase();
         try {
             for (Order o : orders) {
                 o.setStatus(Values.ORDER_STATUS_PAID);
