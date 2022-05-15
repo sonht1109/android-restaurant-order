@@ -56,14 +56,10 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Item
         holder.tvName.setText(o.getDisk().getName());
         holder.tvPriceAndQuantity.setText(o.getDisk().getPrice() + " x " + o.getQuantity());
         if (o.getStatus() == Values.ORDER_STATUS_PENDING) {
-            holder.btnConfirm.setOnClickListener(v -> {
-                orderItemListener.onConfirm(position);
-            });
             holder.btnCancel.setOnClickListener(v -> {
                 orderItemListener.onCancel(position);
             });
         } else {
-            holder.btnConfirm.setVisibility(View.GONE);
             holder.btnCancel.setVisibility(View.GONE);
         }
     }
@@ -76,13 +72,12 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Item
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView tvName, tvPriceAndQuantity;
-        private Button btnConfirm, btnCancel;
+        private Button btnCancel;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.order_item_view_name);
             tvPriceAndQuantity = itemView.findViewById(R.id.order_item_view_price_and_quantity);
-            btnConfirm = itemView.findViewById(R.id.order_item_btn_confirm);
             btnCancel = itemView.findViewById(R.id.order_item_btn_cancel);
         }
     }

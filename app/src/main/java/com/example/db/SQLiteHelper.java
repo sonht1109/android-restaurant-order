@@ -86,7 +86,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 int quantity = c.getInt(1);
                 String diskName = c.getString(2);
                 float diskPrice = c.getFloat(3);
-                int status = c.getInt(3);
+                int status = c.getInt(4);
                 Disk disk = new Disk(diskPrice, diskName);
                 Order order = new Order(quantity, disk, id, status);
                 orders.add(order);
@@ -132,7 +132,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     }
 
     public int updateOrder(Order order) {
-        Log.i("UPDATE ORDER", order.toString());
         ContentValues values = new ContentValues();
         values.put("status", order.getStatus());
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
@@ -174,16 +173,25 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public boolean pay(String phone, int tableNumber) {
         List<Order> orders = getBill(phone, tableNumber);
         SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
         try {
             for (Order o : orders) {
-                ContentValues values = new ContentValues();
-                values.put("status", 2);
-                String[] args = {String.valueOf(o.getId())};
-                db.update("diskOrder", values, "id=?", args);
+                o.setStatus(Values.ORDER_STATUS_PAID);
+                updateOrder(o);
             }
-            db.setTransactionSuccessful();
-        } catch (Exception e){
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean confirmOrders(String phone, int tableNumber) {
+        List<Order> orders = getCurrentOrders(phone, tableNumber);
+        try {
+            for (Order o : orders) {
+                o.setStatus(Values.ORDER_STATUS_ACCEPTED);
+                updateOrder(o);
+            }
+        } catch (Exception e) {
             return false;
         }
         return true;

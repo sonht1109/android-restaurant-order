@@ -52,9 +52,8 @@ public class FrBill extends Fragment {
         btnPay.setOnClickListener(v -> {
             boolean res = db.pay(phone, tableNumber);
             if (res) {
-                adapter.setOrders(new ArrayList<>());
-                adapter.notifyDataSetChanged();
                 Toast.makeText(getContext(), "Thank you. We hope you enjoyed the meal", Toast.LENGTH_SHORT).show();
+                getBill();
             }
         });
 

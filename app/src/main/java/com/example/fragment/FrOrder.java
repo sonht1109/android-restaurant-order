@@ -1,9 +1,11 @@
 package com.example.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +29,7 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
     private RecyclerView rcv;
     private String phone;
     private int tableNumber;
+    private Button btnCofirmOrders;
 
     @Nullable
     @Override
@@ -41,6 +44,7 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
         phone = getActivity().getIntent().getExtras().getString("phone");
         tableNumber = getActivity().getIntent().getExtras().getInt("tableNumber");
         rcv = view.findViewById(R.id.order_rcv);
+        btnCofirmOrders = view.findViewById(R.id.order_btn_confirm_orders);
 
         db = new SQLiteHelper(getContext());
         adapter = new OrderListAdapter();
@@ -50,6 +54,13 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
 
         adapter.setOrderItemListener(this);
         getOrders();
+
+        btnCofirmOrders.setOnClickListener(v -> {
+            boolean res = db.confirmOrders(phone, tableNumber);
+            if(res == true) {
+                getOrders();
+            }
+        });
     }
 
     @Override
@@ -65,13 +76,6 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
 
     @Override
     public void onConfirm(int position) {
-        Order selectedOrder = adapter.getOrders().get(position);
-        selectedOrder.setStatus(Values.ORDER_STATUS_ACCEPTED);
-        int res = db.updateOrder(selectedOrder);
-        if(res >= 0) {
-            adapter.getOrders().set(position, selectedOrder);
-            adapter.notifyItemChanged(position);
-        }
     }
 
     @Override
