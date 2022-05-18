@@ -57,7 +57,7 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
 
         btnConfirmOrders.setOnClickListener(v -> {
             boolean res = db.confirmOrders(phone, tableNumber);
-            if(res == true) {
+            if (res == true) {
                 getOrders();
             }
         });
@@ -70,7 +70,7 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
     }
 
     private void getOrders() {
-        List <Order> orders = db.getCurrentOrders(phone, tableNumber);
+        List<Order> orders = db.getCurrentOrders(phone, tableNumber);
         adapter.setOrders(orders);
         updateConfirmButtonVisible();
     }
@@ -82,17 +82,30 @@ public class FrOrder extends Fragment implements OrderListAdapter.OrderItemListe
     @Override
     public void onCancel(int position) {
         int res = db.deleteOrder(adapter.getOrders().get(position).getId());
-        if(res >= 0) {
+        if (res >= 0) {
             adapter.getOrders().remove(position);
             adapter.notifyDataSetChanged();
         }
     }
 
+    @Override
+    public void onUpdateQuantity(int position, int value) {
+        Order o = adapter.getOrders().get(position);
+        if (o.getQuantity() + value > 0) {
+            o.setQuantity(o.getQuantity() + value);
+            int res = db.updateOrderByQuantity(o);
+            if (res > 0) {
+                adapter.getOrders().set(position, o);
+                adapter.notifyItemChanged(position);
+            }
+        }
+    }
+
     private boolean canConfirmOrders() {
         boolean res = false;
-        List <Order> orders = adapter.getOrders();
-        for(Order o : orders) {
-            if(o.getStatus() == Values.ORDER_STATUS_PENDING) {
+        List<Order> orders = adapter.getOrders();
+        for (Order o : orders) {
+            if (o.getStatus() == Values.ORDER_STATUS_PENDING) {
                 res = true;
                 break;
             }

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -54,13 +55,20 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Item
         Order o = orders.get(position);
         if (o == null) return;
         holder.tvName.setText(o.getDisk().getName());
-        holder.tvPriceAndQuantity.setText(o.getDisk().getPrice() + " x " + o.getQuantity());
+        holder.tvPrice.setText(o.getDisk().getPrice() + " x " + o.getQuantity());
+        holder.tvQuantity.setText(o.getQuantity() + "");
         if (o.getStatus() == Values.ORDER_STATUS_PENDING) {
             holder.btnCancel.setOnClickListener(v -> {
                 orderItemListener.onCancel(position);
             });
+            holder.btnMinus.setOnClickListener(v -> {
+                orderItemListener.onUpdateQuantity(position, -1);
+            });
+            holder.btnPlus.setOnClickListener(v -> {
+                orderItemListener.onUpdateQuantity(position, 1);
+            });
         } else {
-            holder.btnCancel.setVisibility(View.GONE);
+            holder.layoutBottom.setVisibility(View.GONE);
         }
     }
 
@@ -71,19 +79,25 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Item
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvName, tvPriceAndQuantity;
-        private Button btnCancel;
+        private TextView tvName, tvPrice, tvQuantity;
+        private Button btnCancel, btnMinus, btnPlus;
+        private LinearLayout layoutBottom;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.order_item_view_name);
-            tvPriceAndQuantity = itemView.findViewById(R.id.order_item_view_price_and_quantity);
+            tvPrice = itemView.findViewById(R.id.order_item_view_price);
             btnCancel = itemView.findViewById(R.id.order_item_btn_cancel);
+            btnMinus = itemView.findViewById(R.id.order_item_btn_minus);
+            btnPlus = itemView.findViewById(R.id.order_item_btn_plus);
+            tvQuantity = itemView.findViewById(R.id.order_item_tv_quantity);
+            layoutBottom = itemView.findViewById(R.id.order_item_layout_bottom);
         }
     }
 
     public interface OrderItemListener {
         void onConfirm(int position);
         void onCancel(int position);
+        void onUpdateQuantity(int position, int value);
     }
 }

@@ -96,6 +96,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return orders;
     }
 
+    public int updateOrderByQuantity(Order order) {
+        ContentValues values = new ContentValues();
+        values.put("quantity", order.getQuantity());
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String[] args = {String.valueOf(order.getId())};
+        return sqLiteDatabase.update("diskOrder", values, "id=?", args);
+    }
+
     public List<Disk> getMostFavoriteDisks() {
         List<Disk> disks = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
