@@ -6,23 +6,56 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:padding="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:background="@color/purple_200"
-        android:layout_height="wrap_content">
+        android:padding="20dp">
 
         <TextView
+            android:id="@+id/today_tv_sum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:id="@+id/today_tv_sum"
             android:text="Menu"
-            android:textSize="20dp"/>
+            android:textColor="@color/white"
+            android:textSize="20dp" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:id="@+id/today_rcv"
-        />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="Food"
+                android:textSize="20dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/today_rcv_food"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_margin="20dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="Drink"
+                android:textSize="20dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/today_rcv_drink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_margin="20dp" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

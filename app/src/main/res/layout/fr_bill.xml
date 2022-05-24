@@ -11,10 +11,9 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/bill_tv_total"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Your bill: 23000"
+            android:text="Your bill"
             android:textColor="@color/white"
             android:textSize="20dp" />
     </LinearLayout>
@@ -25,12 +24,76 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
+        <Spinner
+            android:id="@+id/bill_e_discount"
+            android:layout_alignParentLeft="true"
+            android:layout_toRightOf="@id/bill_btn_discount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Discount Code"
+            />
+        <Button
+            android:id="@+id/bill_btn_discount"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Apply"
+            />
+    </RelativeLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:shrinkColumns="0"
+        android:stretchColumns="1">
+
+        <TableRow>
+
+            <TextView android:text="Total" />
+
+            <TextView
+                android:id="@+id/bill_tv_total"
+                android:layout_span="2"
+                android:text="300000"
+                android:textAlignment="viewEnd" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView android:text="Table" />
+
+            <TextView
+                android:id="@+id/bill_tv_table"
+                android:layout_span="2"
+                android:text="300000"
+                android:textAlignment="viewEnd" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView android:text="Phone" />
+
+            <TextView
+                android:id="@+id/bill_tv_phone"
+                android:layout_span="2"
+                android:text="300000"
+                android:textAlignment="viewEnd" />
+        </TableRow>
+    </TableLayout>
+
     <Button
         android:id="@+id/bill_btn_pay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:text="Confirm to pay"
         android:layout_margin="20dp"
-        />
+        android:layout_marginTop="0dp"
+        android:text="Confirm to pay" />
 </LinearLayout>

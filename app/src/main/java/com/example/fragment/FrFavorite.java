@@ -20,7 +20,7 @@ import com.example.model.Disk;
 
 import java.util.List;
 
-public class FrFavorite extends Fragment implements ListAdapter.ItemListener {
+public class FrFavorite extends Fragment {
 
     private RecyclerView rcv;
     private SQLiteHelper sqLiteHelper;
@@ -41,15 +41,15 @@ public class FrFavorite extends Fragment implements ListAdapter.ItemListener {
         rcv = view.findViewById(R.id.favorite_rcv);
 
         sqLiteHelper = new SQLiteHelper(getContext());
-        adapter = new ListAdapter();
+        adapter = new ListAdapter((view1, position) -> {
+            onItemClick(view1, position);
+        });
 
         getItems();
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcv.setAdapter(adapter);
         rcv.setLayoutManager(manager);
-
-        adapter.setItemListener(this);
 
         phone = getActivity().getIntent().getExtras().getString("phone");
         tableNumber = getActivity().getIntent().getExtras().getInt("tableNumber");
@@ -60,7 +60,6 @@ public class FrFavorite extends Fragment implements ListAdapter.ItemListener {
         adapter.setDisks(disks);
     }
 
-    @Override
     public void onItemClick(View view, int position) {
         if (tableNumber != -1) {
             Disk d = adapter.getDisks().get(position);

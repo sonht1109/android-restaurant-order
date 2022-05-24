@@ -20,7 +20,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
     private List<Disk> disks;
     private ItemListener itemListener;
 
-    public ListAdapter() {
+    public ListAdapter(ItemListener itemListener) {
+        this.itemListener = itemListener;
     }
 
     public List<Disk> getDisks() {
@@ -49,7 +50,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
         if (d == null) return;
         holder.tvName.setText(d.getName());
         holder.tvPrice.setText(String.valueOf(d.getPrice()));
-        holder.imageView.setImageResource(Values.FOOD_IMAGES[d.getImage()]);
+        if(d.getType() == Values.EnumDiskType.DRINK) {
+            holder.imageView.setImageResource(Values.DRINK_IMAGES[d.getImage()]);
+        }
+        else {
+            holder.imageView.setImageResource(Values.FOOD_IMAGES[d.getImage()]);
+        }
     }
 
     @Override

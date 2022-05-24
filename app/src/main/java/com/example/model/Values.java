@@ -17,4 +17,12 @@ public class Values {
     public static final int[] FOOD_IMAGES = {R.drawable.adeptus,
             R.drawable.sandwich, R.drawable.almond_tofu,
             R.drawable.bamboo, R.drawable.berry_mizu, R.drawable.sushi};
+
+    public static final int[] DRINK_IMAGES = {R.drawable.coke,
+            R.drawable.pepsi, R.drawable.mirinda,
+            R.drawable.water, R.drawable.sochu};
+
+    public static enum EnumDiskType {
+        FOOD, DRINK
+    }
 }

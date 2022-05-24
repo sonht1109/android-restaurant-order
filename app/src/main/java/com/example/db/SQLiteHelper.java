@@ -9,6 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.model.Discount;
 import com.example.model.Disk;
 import com.example.model.Item;
 import com.example.model.Order;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "restaurant.db";
+    private static final String DB_NAME = "restaurant3.db";
     private static int DB_VERSION = 1;
 
     public SQLiteHelper(@Nullable Context context) {
@@ -33,7 +34,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         String sqlCreateDisk = "create table if not exists disk" +
                 "(id integer primary key autoincrement not null," +
                 "name text," +
-                "price real, image integer)";
+                "price real, image integer, type text default 'FOOD')";
 
         String sqlCreateOrder = "create table if not exists diskOrder" +
                 "(id integer primary key autoincrement not null," +
@@ -42,8 +43,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "disk_id integer," +
                 "foreign key (disk_id) references disk(id))";
 
+        String sqlCreateDiscount = "create table if not exists discount" +
+                "(id integer primary key autoincrement not null," +
+                "code text not null unique," +
+                "percentage real)";
+
         db.execSQL(sqlCreateDisk);
         db.execSQL(sqlCreateOrder);
+        db.execSQL(sqlCreateDiscount);
     }
 
     @Override
@@ -58,16 +65,18 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         super.onOpen(db);
     }
 
-    public List<Disk> getAllDisks() {
+    public List<Disk> getAllDisks(Values.EnumDiskType byType) {
         List<Disk> disks = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.query("disk", null, null, null, null, null, null);
+        String[] args = {byType.name()};
+        Cursor c = db.rawQuery("select * from disk where type = ?", args);
         while (c != null && c.moveToNext()) {
             int id = c.getInt(0);
             String name = c.getString(1);
             float price = c.getFloat(2);
             int image = c.getInt(3);
-            disks.add(new Disk(id, image, price, name));
+            Values.EnumDiskType type = Values.EnumDiskType.valueOf(c.getString(4));
+            disks.add(new Disk(id, image, price, name, type));
         }
         return disks;
     }
@@ -107,7 +116,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public List<Disk> getMostFavoriteDisks() {
         List<Disk> disks = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        String[] args= {};
+        String[] args = {};
         Cursor c = db.rawQuery("select d.id, d.name, d.price, d.image, count(d.id) " +
                 "from disk as d, diskOrder as o " +
                 "where o.disk_id = d.id and o.status = 2 " +
@@ -122,6 +131,20 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return disks;
     }
 
+    public List<Discount> getAllDiscount() {
+        List<Discount> discounts = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String[] args = {};
+        Cursor c = db.rawQuery("select * from discount", args);
+        while (c != null && c.moveToNext()) {
+            int id = c.getInt(0);
+            String code = c.getString(1);
+            float percentage = c.getFloat(2);
+            discounts.add(new Discount(id, code, percentage));
+        }
+        return discounts;
+    }
+
     public long createOrder(Order order) {
         ContentValues values = new ContentValues();
         values.put("quantity", order.getQuantity());
@@ -134,11 +157,20 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return sqLiteDatabase.insert("diskOrder", null, values);
     }
 
+    public long createDiscount(Discount discount) {
+        ContentValues values = new ContentValues();
+        values.put("code", discount.getCode());
+        values.put("percentage", discount.getPercentage());
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        return sqLiteDatabase.insert("discount", null, values);
+    }
+
     public long createDisk(Disk disk) {
         ContentValues values = new ContentValues();
         values.put("name", disk.getName());
         values.put("price", disk.getPrice());
         values.put("image", disk.getImage());
+        values.put("type", disk.getType().name());
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         return sqLiteDatabase.insert("disk", null, values);
     }
@@ -162,7 +194,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         List<Order> orders = new ArrayList<>();
         String[] args = {phone, String.valueOf(tableNumber)};
-        Cursor c = db.rawQuery("select o.id, o.quantity, d.name, d.price, o.status " +
+        Cursor c = db.rawQuery("select o.id, o.quantity, d.name, d.price, o.status, d.type " +
                 "from disk as d, diskOrder as o " +
                 "where d.id = o.disk_id and o.phone = ? and o.tableNumber = ? and o.status = 1", args);
         if (c.getCount() > 0) {
@@ -173,7 +205,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 String diskName = c.getString(2);
                 float diskPrice = c.getFloat(3);
                 int status = c.getInt(4);
+                String type = c.getString(5);
                 Disk disk = new Disk(diskPrice, diskName);
+                disk.setType(Values.EnumDiskType.valueOf(type));
                 Order order = new Order(quantity, disk, id, status);
                 orders.add(order);
                 c.moveToNext();
@@ -206,6 +240,25 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             return false;
         }
         return true;
+    }
+
+    public Discount getDiscount(String byCode) {
+        try {
+            String[] args = {byCode};
+            SQLiteDatabase db = getReadableDatabase();
+            Cursor c = db.rawQuery("select * from discount where code = ?", args);
+            Discount discount = null;
+            if (c != null && c.moveToNext()) {
+                int id = c.getInt(0);
+                String code = c.getString(1);
+                float percent = c.getFloat(2);
+                discount = new Discount(id, code, percent);
+            }
+            return discount;
+        }
+        catch(Exception e) {
+            return null;
+        }
     }
 
 }

@@ -16,16 +16,18 @@ import com.example.CreateOrder;
 import com.example.R;
 import com.example.adapter.ListAdapter;
 import com.example.db.SQLiteHelper;
+import com.example.model.Discount;
 import com.example.model.Disk;
+import com.example.model.Values;
 
 import java.util.List;
 
-public class FrMenu extends Fragment implements ListAdapter.ItemListener {
+public class FrMenu extends Fragment {
 
-    private RecyclerView rcv;
+    private RecyclerView rcvFood, rcvDrink;
     private SQLiteHelper sqLiteHelper;
-    private List<Disk> disks;
-    private ListAdapter adapter;
+    private List<Disk> foods, drinks;
+    private ListAdapter adapterFood, adapterDrink;
     private String phone = "";
     private int tableNumber = -1;
 
@@ -38,39 +40,72 @@ public class FrMenu extends Fragment implements ListAdapter.ItemListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rcv = view.findViewById(R.id.today_rcv);
+        rcvFood = view.findViewById(R.id.today_rcv_food);
+        rcvDrink = view.findViewById(R.id.today_rcv_drink);
 
         sqLiteHelper = new SQLiteHelper(getContext());
-        adapter = new ListAdapter();
+        adapterFood = new ListAdapter((view1, position) -> {
+            onFoodClick(view1, position);
+        });
+        adapterDrink = new ListAdapter((view1, position) -> {
+            onDrinkClick(view1, position);
+        });
 
         getItems();
 
-        LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        rcv.setAdapter(adapter);
-        rcv.setLayoutManager(manager);
+        LinearLayoutManager managerFood = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        rcvFood.setAdapter(adapterFood);
+        rcvFood.setLayoutManager(managerFood);
 
-        adapter.setItemListener(this);
+        LinearLayoutManager managerDrink = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        rcvDrink.setAdapter(adapterDrink);
+        rcvDrink.setLayoutManager(managerDrink);
 
         phone = getActivity().getIntent().getExtras().getString("phone");
         tableNumber = getActivity().getIntent().getExtras().getInt("tableNumber");
 
-//        sqLiteHelper.createDisk(new Disk(0, 1200, "Súp cua dăm bông"));
-//        sqLiteHelper.createDisk(new Disk(1, 300, "Trứng ốp"));
-//        sqLiteHelper.createDisk(new Disk(2, 1200, "Đậu hũ hạnh nhân"));
-//        sqLiteHelper.createDisk(new Disk(3, 1200, "Măng chua"));
-//        sqLiteHelper.createDisk(new Disk(4, 1200, "Mochi mâm xôi"));
-//        sqLiteHelper.createDisk(new Disk(5, 1200, "Sushi trứng chim"));
+        sqLiteHelper.createDisk(new Disk(0, 1200, "Súp cua dăm bông", Values.EnumDiskType.FOOD));
+        sqLiteHelper.createDisk(new Disk(1, 300, "Trứng ốp", Values.EnumDiskType.FOOD));
+        sqLiteHelper.createDisk(new Disk(2, 340, "Đậu hũ hạnh nhân", Values.EnumDiskType.FOOD));
+        sqLiteHelper.createDisk(new Disk(3, 970, "Măng chua", Values.EnumDiskType.FOOD));
+        sqLiteHelper.createDisk(new Disk(4, 232, "Mochi mâm xôi", Values.EnumDiskType.FOOD));
+        sqLiteHelper.createDisk(new Disk(5, 570, "Sushi trứng chim", Values.EnumDiskType.FOOD));
+
+        sqLiteHelper.createDisk(new Disk(0, 20, "Coca", Values.EnumDiskType.DRINK));
+        sqLiteHelper.createDisk(new Disk(1, 20, "Pepsi", Values.EnumDiskType.DRINK));
+        sqLiteHelper.createDisk(new Disk(2, 15, "Mirinda", Values.EnumDiskType.DRINK));
+        sqLiteHelper.createDisk(new Disk(3, 10, "Aquafina", Values.EnumDiskType.DRINK));
+        sqLiteHelper.createDisk(new Disk(4, 30, "Sochu", Values.EnumDiskType.DRINK));
+
+        sqLiteHelper.createDiscount(new Discount("GIAM10", 20));
+        sqLiteHelper.createDiscount(new Discount("GIAM20", 20));
+        sqLiteHelper.createDiscount(new Discount("GIAM30", 30));
+        sqLiteHelper.createDiscount(new Discount("GIAM50", 50));
+
     }
 
     private void getItems() {
-        disks = sqLiteHelper.getAllDisks();
-        adapter.setDisks(disks);
+        foods = sqLiteHelper.getAllDisks(Values.EnumDiskType.FOOD);
+        drinks = sqLiteHelper.getAllDisks(Values.EnumDiskType.DRINK);
+
+        adapterFood.setDisks(foods);
+        adapterDrink.setDisks(drinks);
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
+    public void onFoodClick(View view, int position) {
         if (tableNumber != -1) {
-            Disk d = adapter.getDisks().get(position);
+            Disk d = adapterFood.getDisks().get(position);
+            Intent t = new Intent(getActivity(), CreateOrder.class);
+            t.putExtra("disk", d);
+            t.putExtra("phone", phone);
+            t.putExtra("tableNumber", tableNumber);
+            startActivity(t);
+        }
+    }
+
+    public void onDrinkClick(View view, int position) {
+        if (tableNumber != -1) {
+            Disk d = adapterDrink.getDisks().get(position);
             Intent t = new Intent(getActivity(), CreateOrder.class);
             t.putExtra("disk", d);
             t.putExtra("phone", phone);
