@@ -21,7 +21,7 @@ import java.util.List;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "restaurant3.db";
+    private static final String DB_NAME = "restaurant4.db";
     private static int DB_VERSION = 1;
 
     public SQLiteHelper(@Nullable Context context) {
@@ -40,8 +40,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "(id integer primary key autoincrement not null," +
                 "quantity integer, date text, status integer," +
                 "phone text, tableNumber integer," +
-                "disk_id integer," +
-                "foreign key (disk_id) references disk(id))";
+                "disk_id integer, discount_id integer, " +
+                "foreign key (disk_id) references disk(id), " +
+                "foreign key (discount_id) references discount(id))";
 
         String sqlCreateDiscount = "create table if not exists discount" +
                 "(id integer primary key autoincrement not null," +
@@ -117,7 +118,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         List<Disk> disks = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
         String[] args = {};
-        Cursor c = db.rawQuery("select d.id, d.name, d.price, d.image, count(d.id) " +
+        Cursor c = db.rawQuery("select d.id, d.name, d.price, d.image, d.type, count(d.id) " +
                 "from disk as d, diskOrder as o " +
                 "where o.disk_id = d.id and o.status = 2 " +
                 "group by d.id having count(d.id) > 0 order by count(d.id) desc", args);
@@ -126,7 +127,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             String name = c.getString(1);
             float price = c.getFloat(2);
             int image = c.getInt(3);
-            disks.add(new Disk(id, image, price, name));
+            Values.EnumDiskType type = Values.EnumDiskType.valueOf(c.getString(4));
+            disks.add(new Disk(id, image, price, name, type));
         }
         return disks;
     }
@@ -178,6 +180,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public int updateOrder(Order order) {
         ContentValues values = new ContentValues();
         values.put("status", order.getStatus());
+        if(order.getDiscount() != null) {
+            values.put("discount_id", order.getDiscount().getId());
+        }
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String[] args = {String.valueOf(order.getId())};
         return sqLiteDatabase.update("diskOrder", values, "id=?", args);
@@ -216,11 +221,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return orders;
     }
 
-    public boolean pay(String phone, int tableNumber) {
+    public boolean pay(String phone, int tableNumber, Discount discount) {
         List<Order> orders = getBill(phone, tableNumber);
         try {
             for (Order o : orders) {
                 o.setStatus(Values.ORDER_STATUS_PAID);
+                o.setDiscount(discount);
                 updateOrder(o);
             }
         } catch (Exception e) {

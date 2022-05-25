@@ -64,23 +64,23 @@ public class FrMenu extends Fragment {
         phone = getActivity().getIntent().getExtras().getString("phone");
         tableNumber = getActivity().getIntent().getExtras().getInt("tableNumber");
 
-        sqLiteHelper.createDisk(new Disk(0, 1200, "Súp cua dăm bông", Values.EnumDiskType.FOOD));
-        sqLiteHelper.createDisk(new Disk(1, 300, "Trứng ốp", Values.EnumDiskType.FOOD));
-        sqLiteHelper.createDisk(new Disk(2, 340, "Đậu hũ hạnh nhân", Values.EnumDiskType.FOOD));
-        sqLiteHelper.createDisk(new Disk(3, 970, "Măng chua", Values.EnumDiskType.FOOD));
-        sqLiteHelper.createDisk(new Disk(4, 232, "Mochi mâm xôi", Values.EnumDiskType.FOOD));
-        sqLiteHelper.createDisk(new Disk(5, 570, "Sushi trứng chim", Values.EnumDiskType.FOOD));
-
-        sqLiteHelper.createDisk(new Disk(0, 20, "Coca", Values.EnumDiskType.DRINK));
-        sqLiteHelper.createDisk(new Disk(1, 20, "Pepsi", Values.EnumDiskType.DRINK));
-        sqLiteHelper.createDisk(new Disk(2, 15, "Mirinda", Values.EnumDiskType.DRINK));
-        sqLiteHelper.createDisk(new Disk(3, 10, "Aquafina", Values.EnumDiskType.DRINK));
-        sqLiteHelper.createDisk(new Disk(4, 30, "Sochu", Values.EnumDiskType.DRINK));
-
-        sqLiteHelper.createDiscount(new Discount("GIAM10", 20));
-        sqLiteHelper.createDiscount(new Discount("GIAM20", 20));
-        sqLiteHelper.createDiscount(new Discount("GIAM30", 30));
-        sqLiteHelper.createDiscount(new Discount("GIAM50", 50));
+//        sqLiteHelper.createDisk(new Disk(0, 1200, "Súp cua dăm bông", Values.EnumDiskType.FOOD));
+//        sqLiteHelper.createDisk(new Disk(1, 300, "Trứng ốp", Values.EnumDiskType.FOOD));
+//        sqLiteHelper.createDisk(new Disk(2, 340, "Đậu hũ hạnh nhân", Values.EnumDiskType.FOOD));
+//        sqLiteHelper.createDisk(new Disk(3, 970, "Măng chua", Values.EnumDiskType.FOOD));
+//        sqLiteHelper.createDisk(new Disk(4, 232, "Mochi mâm xôi", Values.EnumDiskType.FOOD));
+//        sqLiteHelper.createDisk(new Disk(5, 570, "Sushi trứng chim", Values.EnumDiskType.FOOD));
+//
+//        sqLiteHelper.createDisk(new Disk(0, 20, "Coca", Values.EnumDiskType.DRINK));
+//        sqLiteHelper.createDisk(new Disk(1, 20, "Pepsi", Values.EnumDiskType.DRINK));
+//        sqLiteHelper.createDisk(new Disk(2, 15, "Mirinda", Values.EnumDiskType.DRINK));
+//        sqLiteHelper.createDisk(new Disk(3, 10, "Aquafina", Values.EnumDiskType.DRINK));
+//        sqLiteHelper.createDisk(new Disk(4, 30, "Sochu", Values.EnumDiskType.DRINK));
+//
+//        sqLiteHelper.createDiscount(new Discount("GIAM10", 20));
+//        sqLiteHelper.createDiscount(new Discount("GIAM20", 20));
+//        sqLiteHelper.createDiscount(new Discount("GIAM30", 30));
+//        sqLiteHelper.createDiscount(new Discount("GIAM50", 50));
 
     }
 

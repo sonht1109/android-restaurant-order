@@ -6,6 +6,7 @@ public class Order implements Serializable {
     private int id, quantity, tableNumber, status;
     private Disk disk;
     private String date, phone;
+    private Discount discount;
 
     public Order(int quantity, int tableNumber, int status, Disk disk, String date, String phone) {
         this.quantity = quantity;
@@ -100,5 +101,13 @@ public class Order implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Discount getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
     }
 }
